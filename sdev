@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load Titanic dataset
+titanic = sns.load_dataset('titanic')
+
+# Select numeric column 'fare'
+fare = titanic['fare']
+
+# Plot Boxplot BEFORE removing outliers
+plt.figure(figsize=(8,6))
+sns.boxplot(x=fare)
+plt.title('Boxplot BEFORE Removing Outliers')
+plt.show()
+
+# Calculate mean and standard deviation
+mean_fare = fare.mean()
+std_fare = fare.std()
+
+# Remove outliers using np.abs()
+titanic_clean = titanic[np.abs(fare - mean_fare) <= 3 * std_fare]
+
+# Show shapes before and after
+print(f"Original shape: {titanic.shape}")
+print(f"After removing outliers: {titanic_clean.shape}")
+
+# Plot Boxplot AFTER removing outliers
+plt.figure(figsize=(8,6))
+sns.boxplot(x=titanic_clean['fare'])
+plt.title('Boxplot AFTER Removing Outliers')
+plt.show()
