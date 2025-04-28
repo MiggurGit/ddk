@@ -1,0 +1,40 @@
+# Step 1: Import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Step 2: Load the Iris dataset using pandas
+url = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv"
+iris = pd.read_csv(url)
+print(iris.head())
+
+# Step 3: Check for missing values
+print("\nMissing values in dataset:")
+print(iris.isnull().sum())
+
+# Step 4: Visualize boxplots before removing outliers
+plt.figure(figsize=(10,6))
+iris_numeric = iris.select_dtypes(include=[np.number])
+plt.title('Boxplot Before Removing Outliers')
+plt.boxplot(iris_numeric.values, labels=iris_numeric.columns)
+plt.show()
+
+# Step 5: Calculate Z-Scores
+z_scores = np.abs(stats.zscore(iris_numeric))
+
+# Step 6: Set threshold
+threshold = 3
+filtered_entries = (z_scores < threshold).all(axis=1)
+iris_clean = iris[filtered_entries]
+
+# Step 7: Show shape before and after
+print(f"\nOriginal dataset shape: {iris.shape}")
+print(f"Dataset shape after removing outliers: {iris_clean.shape}")
+
+# Step 8: Visualize boxplots after removing outliers
+plt.figure(figsize=(10,6))
+iris_numeric_clean = iris_clean.select_dtypes(include=[np.number])
+plt.title('Boxplot After Removing Outliers')
+plt.boxplot(iris_numeric_clean.values, labels=iris_numeric_clean.columns)
+plt.show()
