@@ -1,0 +1,20 @@
+import pandas as pd 
+import numpy as np
+from sklearn.datasets import fetch_openml
+
+boston = fetch_openml("Boston",version=1,as_frame=True)
+df=boston.frame
+
+print(df.head(20))
+
+df["age_width_bin"] = pd.cut(df['AGE'],bins=4,labels=['young','mid age','old','very old'])
+
+df["age_freq_bin"] = pd.qcut(df['AGE'],q=4,labels=['young','mid age','old','very old'])
+
+print(df[['AGE','age_width_bin',"age_freq_bin"]].head(20))
+
+max_age = df['AGE'].max()
+min_age = df['AGE'].min()
+
+print(f"Maximum value in AGE column: {max_age}")
+print(f"Minimum value in AGE column: {min_age}")
