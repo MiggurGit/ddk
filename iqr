@@ -1,0 +1,39 @@
+# Step 1: Import libraries
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load the Titanic dataset
+titanic = sns.load_dataset('titanic')
+print(titanic.head())
+
+# Step 3: Select a numeric column for outlier removal
+# Let's use the 'fare' column (ticket price)
+
+# Step 4: Visualize before removing outliers
+plt.figure(figsize=(8,6))
+sns.boxplot(x=titanic['fare'])
+plt.title('Boxplot Before Removing Outliers')
+plt.show()
+
+# Step 5: Calculate IQR
+Q1 = titanic['fare'].quantile(0.25)
+Q3 = titanic['fare'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Step 6: Define lower and upper bounds
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Step 7: Remove outliers
+titanic_clean = titanic[(titanic['fare'] >= lower_bound) & (titanic['fare'] <= upper_bound)]
+
+# Step 8: Show shape before and after
+print(f"\nOriginal dataset shape: {titanic.shape}")
+print(f"Dataset shape after removing outliers: {titanic_clean.shape}")
+
+# Step 9: Visualize after removing outliers
+plt.figure(figsize=(8,6))
+sns.boxplot(x=titanic_clean['fare'])
+plt.title('Boxplot After Removing Outliers')
+plt.show()
