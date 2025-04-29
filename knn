@@ -1,0 +1,40 @@
+# Install if needed
+# pip install scikit-learn pandas matplotlib
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Step 1: Load Iris Dataset
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=iris.feature_names)
+y = iris.target
+
+print("Feature Columns:")
+print(X.columns)
+
+# Step 2: Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 3: Train KNN Classifier
+knn = KNeighborsClassifier(n_neighbors=5)  # k=5
+knn.fit(X_train, y_train)
+
+# Step 4: Predict on Test Set
+y_pred = knn.predict(X_test)
+
+# Step 5: Evaluate Model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"\nAccuracy: {accuracy:.2f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# Optional: Confusion Matrix
+conf_mat = confusion_matrix(y_test, y_pred)
+print("\nConfusion Matrix:")
+print(conf_mat)
