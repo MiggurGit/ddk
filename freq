@@ -1,0 +1,43 @@
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import fpgrowth, association_rules
+
+# Your data
+data = {
+    'Transaction': ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9'],
+    'Items': [
+        ['A', 'B', 'E'],
+        ['B', 'D'],
+        ['B', 'C'],
+        ['A', 'B', 'D'],
+        ['A', 'C'],
+        ['B', 'C'],
+        ['A', 'C'],
+        ['A', 'B', 'C', 'E'],
+        ['A', 'B', 'C']
+    ]
+}
+
+# Extract the list of itemsets
+transactions = data['Items']
+print("Transactions:")
+print(transactions)
+
+# One-hot encoding
+encoder = TransactionEncoder()
+onehot = encoder.fit_transform(transactions)
+
+df = pd.DataFrame(onehot, columns=encoder.columns_)
+
+# Frequent itemsets using FP-Growth
+frequent_itemsets = fpgrowth(df, min_support=0.33, use_colnames=True)
+
+print("\nFrequent Itemsets:")
+print(frequent_itemsets)
+
+# Generate association rules
+rules = association_rules(frequent_itemsets, metric='confidence', min_threshold=0.5)
+
+# Display rules
+print("\nAssociation Rules:")
+print(rules[[ 'consequents', 'support', 'confidence', 'lift']])
